@@ -4,8 +4,35 @@
  */
 package GUI;
 
+import DBConnect.DataBase;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import javax.swing.JOptionPane;
+import java.sql.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.PreparedStatement;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+
+
+
 
 /**
  *
@@ -66,7 +93,10 @@ public class MainFrame extends javax.swing.JFrame {
                 TFNamaPerusahaan.setEditable(true);
                 TFJabatan.setEditable(true);
             }
-        });
+        });  
+        
+        
+
         
     }
     
@@ -101,16 +131,18 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel13 = new javax.swing.JLabel();
         TFNamaJurusan = new javax.swing.JTextField();
         BTNinputPelajar = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
+        TFTglLahir = new javax.swing.JTextField();
         PanelMainMenu = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        jToggleButton3 = new javax.swing.JToggleButton();
         BTNiNPUT = new javax.swing.JButton();
         BTNEditPenyewa = new javax.swing.JButton();
         PanelEditPenyewa = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jButton2 = new javax.swing.JButton();
+        BTNHapus = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -171,7 +203,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PanelPekerjaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(TFNamaPerusahaan)
+                    .addComponent(TFNamaPerusahaan, javax.swing.GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
                     .addComponent(TFJabatan)))
         );
         PanelPekerjaLayout.setVerticalGroup(
@@ -210,12 +242,12 @@ public class MainFrame extends javax.swing.JFrame {
             PanelPelajarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelPelajarLayout.createSequentialGroup()
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
-                .addComponent(TFNamaJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 316, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addGroup(PanelPelajarLayout.createSequentialGroup()
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(TFNamaJurusan, javax.swing.GroupLayout.PREFERRED_SIZE, 286, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelPelajarLayout.createSequentialGroup()
                 .addComponent(jLabel12)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(TFNamaSekolah))
+                .addComponent(TFNamaSekolah, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         PanelPelajarLayout.setVerticalGroup(
             PanelPelajarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -239,6 +271,15 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        jLabel10.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        jLabel10.setText("Tgl.Lahir: ");
+
+        TFTglLahir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TFTglLahirActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelPenyewaBaruLayout = new javax.swing.GroupLayout(PanelPenyewaBaru);
         PanelPenyewaBaru.setLayout(PanelPenyewaBaruLayout);
         PanelPenyewaBaruLayout.setHorizontalGroup(
@@ -248,33 +289,46 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
                         .addContainerGap(138, Short.MAX_VALUE)
                         .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelPenyewaBaruLayout.createSequentialGroup()
+                            .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
                                 .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel6))
-                                .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                                            .addComponent(jLabel10)
+                                            .addGap(363, 363, 363))
+                                        .addComponent(PanelPekerja, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(CBJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(CBStatusPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 218, Short.MAX_VALUE))
+                                        .addComponent(jLabel6)
+                                        .addGap(102, 102, 102)
+                                        .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(TFAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(TFTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(PanelPelajar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(28, 28, 28)
+                                .addComponent(BTNinputPelajar))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelPenyewaBaruLayout.createSequentialGroup()
                                 .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(TFAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(PanelPelajar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(PanelPekerja, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING))
-                                    .addComponent(TFNamaPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(BTNinputPelajar))))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                                            .addComponent(jLabel2)
+                                            .addGap(311, 311, 311))
+                                        .addComponent(TFNamaPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, PanelPenyewaBaruLayout.createSequentialGroup()
+                                        .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(jLabel4))
+                                        .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(CBJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(CBStatusPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
                         .addGap(173, 173, 173)
                         .addComponent(jLabel1)))
-                .addGap(300, 300, 300))
+                .addContainerGap())
         );
         PanelPenyewaBaruLayout.setVerticalGroup(
             PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -293,28 +347,27 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(CBJenisKelamin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(TFAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelPekerja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(BTNinputPelajar)
-                    .addComponent(PanelPelajar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(300, Short.MAX_VALUE))
+                .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                        .addGap(141, 141, 141)
+                        .addComponent(BTNinputPelajar))
+                    .addGroup(PanelPenyewaBaruLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(TFAlamat, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel6))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(PanelPenyewaBaruLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel10)
+                            .addComponent(TFTglLahir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PanelPekerja, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(PanelPelajar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/GUI/assets.png"))); // NOI18N
-
-        jToggleButton3.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
-        jToggleButton3.setText("Edit Penyewa");
-        jToggleButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButton3ActionPerformed(evt);
-            }
-        });
 
         BTNiNPUT.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
         BTNiNPUT.setText("INPUT PENYEWA");
@@ -339,8 +392,7 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(PanelMainMenuLayout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(PanelMainMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(BTNiNPUT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jToggleButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
+                    .addComponent(BTNiNPUT, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelMainMenuLayout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(41, 41, 41))
@@ -354,11 +406,9 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(BTNiNPUT, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BTNEditPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(30, 30, 30)
-                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(321, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jLabel8.setFont(new java.awt.Font("Trebuchet MS", 1, 36)); // NOI18N
@@ -366,48 +416,62 @@ public class MainFrame extends javax.swing.JFrame {
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nama Penyewa", "Status Penyewa", "Jenis Kelamin", "alamat asal", "Tgl.Lahir", "Nama Perusahaan", "Jabatan", "Nama Sekolah/Kampus", "Jurusan"
             }
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jButton2.setBackground(new java.awt.Color(255, 255, 51));
-        jButton2.setText("Update");
+        BTNHapus.setBackground(new java.awt.Color(255, 0, 0));
+        BTNHapus.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BTNHapus.setText("Delete");
+        BTNHapus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNHapusActionPerformed(evt);
+            }
+        });
+
+        jButton3.setBackground(new java.awt.Color(255, 255, 51));
+        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        jButton3.setText("Update");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout PanelEditPenyewaLayout = new javax.swing.GroupLayout(PanelEditPenyewa);
         PanelEditPenyewa.setLayout(PanelEditPenyewaLayout);
         PanelEditPenyewaLayout.setHorizontalGroup(
             PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEditPenyewaLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel8)
-                .addGap(330, 330, 330))
             .addGroup(PanelEditPenyewaLayout.createSequentialGroup()
-                .addGroup(PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGap(31, 31, 31)
+                .addGroup(PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 831, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(PanelEditPenyewaLayout.createSequentialGroup()
-                        .addGap(790, 790, 790)
-                        .addComponent(jButton2))
-                    .addGroup(PanelEditPenyewaLayout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 816, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(48, Short.MAX_VALUE))
+                        .addComponent(BTNHapus)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButton3)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEditPenyewaLayout.createSequentialGroup()
+                .addContainerGap(341, Short.MAX_VALUE)
+                .addComponent(jLabel8)
+                .addGap(338, 338, 338))
         );
         PanelEditPenyewaLayout.setVerticalGroup(
             PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelEditPenyewaLayout.createSequentialGroup()
-                .addGap(43, 43, 43)
+                .addGap(37, 37, 37)
                 .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(BTNHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(149, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -419,13 +483,14 @@ public class MainFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(PanelEditPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PanelMainMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PanelEditPenyewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -448,12 +513,75 @@ public class MainFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_TFJabatanActionPerformed
 
     private void BTNinputPelajarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNinputPelajarActionPerformed
-        // TODO add your handling code here:
+        try {
+            SimpleDateFormat dateS = new SimpleDateFormat("yyyy-MM-dd");
+            String nama = TFNamaPenyewa.getText();
+            String alamat = TFAlamat.getText();
+            String Status = (String) CBStatusPenyewa.getSelectedItem();
+            String JK = (String) CBJenisKelamin.getSelectedItem();
+            String TglLahir = TFTglLahir.getText().trim();
+            String NamaPerusahaan = TFNamaPerusahaan.getText();
+            String Jabatan = TFJabatan.getText();
+            String Kampus = TFNamaSekolah.getText();
+            String Jurusan = TFNamaJurusan.getText();
+            String id_penyewa = null;
+            
+            Connection kon = DataBase.getKoneksi();
+            kon.setAutoCommit(false);
+            
+        java.util.Date utilDate = dateS.parse(TglLahir);
+        
+        // Convert to java.sql.Date for database
+        java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+            
+            try {
+                String sql1 = "INSERT INTO penyewa (nama, alamat, jenis_kelamin, tanggal_lahir, asal_kampus, jurusan, nama_perusahaan, jabatan) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                PreparedStatement st1 = kon.prepareStatement(sql1, Statement.RETURN_GENERATED_KEYS); 
+                st1.setString(1, nama);
+                st1.setString(2, alamat);
+                st1.setString(3, JK);
+                st1.setDate(4, sqlDate);
+                st1.setString(5, Kampus);
+                st1.setString(6, Jurusan);
+                st1.setString(7, NamaPerusahaan);
+                st1.setString(8, Jabatan);
+                st1.executeUpdate();
+                if (id_penyewa == null){
+                ResultSet rs = st1.getGeneratedKeys();
+                if(rs.next()){
+                int generatedId = rs.getInt(1);
+                kon.commit();
+                }
+                }
+                
+            } catch (SQLException e) {
+            // Rollback if any error occurs
+            kon.rollback();
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Reset auto-commit and close connection
+            kon.setAutoCommit(true);
+            kon.close();
+}
+            
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            model.addRow(new Object[]{nama, Status, JK, alamat, TglLahir, NamaPerusahaan, Jabatan, Kampus, Jurusan});
+            
+            TFNamaPenyewa.setText("");
+            TFAlamat.setText("");
+            CBStatusPenyewa.setSelectedItem("Pekerja");
+            CBJenisKelamin.setSelectedItem("Laki-laki");
+            TFTglLahir.setText("");
+            TFNamaPerusahaan.setText("");
+            TFJabatan.setText("");
+            TFNamaSekolah.setText("");
+            TFNamaJurusan.setText("");
+        } catch (SQLException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(MainFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_BTNinputPelajarActionPerformed
-
-    private void jToggleButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jToggleButton3ActionPerformed
 
     private void BTNiNPUTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNiNPUTActionPerformed
         PanelMainMenu.setVisible(true);
@@ -476,6 +604,72 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TFNamaJurusanActionPerformed
 
+    private void TFTglLahirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFTglLahirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TFTglLahirActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void BTNHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNHapusActionPerformed
+        int selectedRow = jTable1.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih baris data yang ingin dihapus terlebih dahulu.");
+        } else {
+            int konfirmasi = JOptionPane.showConfirmDialog(null, 
+                "Yakin ingin menghapus data ini?", 
+                "Konfirmasi Hapus", 
+                JOptionPane.YES_NO_OPTION);
+
+            if (konfirmasi == JOptionPane.YES_OPTION) {
+                // Hapus dari model tabel
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                model.removeRow(selectedRow);
+
+                // TODO: Jika kamu juga simpan data ke database atau file, tambahkan logika hapus di sana juga
+
+                JOptionPane.showMessageDialog(null, "Data berhasil dihapus.");
+            }
+        }
+    }//GEN-LAST:event_BTNHapusActionPerformed
+private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        Vector<Vector> TableData = model.getDataVector();
+        
+        try {
+        FileOutputStream file = new FileOutputStream("file.bin");
+        ObjectOutputStream output =  new ObjectOutputStream(file);
+        
+        output.writeObject(TableData);
+        
+        output.close();
+        file.close();
+        }catch (Exception ex){
+        ex.printStackTrace();
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
+        try {
+        FileInputStream file = new FileInputStream("file.bin");
+        ObjectInputStream input =  new ObjectInputStream(file);
+        
+         Vector<Vector> TableData =  (Vector<Vector>)input.readObject();
+        
+        input.close();
+        file.close();
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        for(int i = 0; i< TableData.size(); i++){
+        Vector row = TableData.get(i);
+        model.addRow(new Object[]{row.get(0),row.get(1),row.get(2),row.get(3)});
+        }
+        }catch (Exception ex){
+        ex.printStackTrace();
+        }
+    }
     
     
     /**
@@ -510,11 +704,14 @@ public class MainFrame extends javax.swing.JFrame {
             public void run() {
                 new MainFrame().setVisible(true);
             }
+            
         });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNEditPenyewa;
+    private javax.swing.JButton BTNHapus;
     private javax.swing.JButton BTNiNPUT;
     private javax.swing.JButton BTNinputPelajar;
     private javax.swing.JComboBox<String> CBJenisKelamin;
@@ -530,8 +727,10 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JTextField TFNamaPenyewa;
     private javax.swing.JTextField TFNamaPerusahaan;
     private javax.swing.JTextField TFNamaSekolah;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JTextField TFTglLahir;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
@@ -544,6 +743,6 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
-    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }
+
