@@ -23,7 +23,7 @@ import java.sql.SQLException;
     public static Connection getKoneksi(){
         if (koneksi == null) {
             try{
-            String server = "192.168.1.4";
+            String server = "192.168.1.4"; //isi pake ip address laptop kalian 
             String database = "Project_Basdat";
             String user = "ProjectBasdat";
             String password = "kelompok10_123";

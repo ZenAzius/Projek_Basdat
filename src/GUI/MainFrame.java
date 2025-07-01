@@ -45,6 +45,7 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        tampilkanDataPenyewa();
         
         PanelMainMenu.setVisible(true);
         PanelPenyewaBaru.setVisible(true);
@@ -142,7 +143,7 @@ public class MainFrame extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         BTNHapus = new javax.swing.JButton();
-        jButton3 = new javax.swing.JButton();
+        BTNUpdate = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -433,12 +434,12 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton3.setBackground(new java.awt.Color(255, 255, 51));
-        jButton3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jButton3.setText("Update");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
+        BTNUpdate.setBackground(new java.awt.Color(255, 255, 51));
+        BTNUpdate.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        BTNUpdate.setText("Update");
+        BTNUpdate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
+                BTNUpdateActionPerformed(evt);
             }
         });
 
@@ -453,7 +454,7 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(PanelEditPenyewaLayout.createSequentialGroup()
                         .addComponent(BTNHapus)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton3)))
+                        .addComponent(BTNUpdate)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelEditPenyewaLayout.createSequentialGroup()
                 .addContainerGap(341, Short.MAX_VALUE)
@@ -470,7 +471,7 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addGroup(PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BTNHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BTNUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(149, Short.MAX_VALUE))
         );
 
@@ -608,31 +609,72 @@ public class MainFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_TFTglLahirActionPerformed
 
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton3ActionPerformed
 
-    private void BTNHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNHapusActionPerformed
-        int selectedRow = jTable1.getSelectedRow();
-        
-        if (selectedRow == -1) {
-            JOptionPane.showMessageDialog(null, "Pilih baris data yang ingin dihapus terlebih dahulu.");
-        } else {
-            int konfirmasi = JOptionPane.showConfirmDialog(null, 
-                "Yakin ingin menghapus data ini?", 
-                "Konfirmasi Hapus", 
-                JOptionPane.YES_NO_OPTION);
+    private void BTNUpdateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNUpdateActionPerformed
+        int row = jTable1.getSelectedRow();
+        if (row == -1) {
+            JOptionPane.showMessageDialog(null, "Pilih baris terlebih dahulu!");
+            return;
+        }
 
-            if (konfirmasi == JOptionPane.YES_OPTION) {
-                // Hapus dari model tabel
-                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                model.removeRow(selectedRow);
+        String id = jTable1.getValueAt(row, 0).toString();
+        String nama = jTable1.getValueAt(row, 1).toString();
+        String alamat = jTable1.getValueAt(row, 2).toString();
+        String kelamin = jTable1.getValueAt(row, 3).toString();
+        String tglLahir = jTable1.getValueAt(row, 4).toString();
+        String jurusan = jTable1.getValueAt(row, 5).toString();
+        String asalKampus = jTable1.getValueAt(row, 6).toString();
+        String jabatan = jTable1.getValueAt(row, 7).toString();
+        String perusahaan = jTable1.getValueAt(row, 8).toString();
 
-                // TODO: Jika kamu juga simpan data ke database atau file, tambahkan logika hapus di sana juga
 
-                JOptionPane.showMessageDialog(null, "Data berhasil dihapus.");
+        DialogUpdate dialog = new DialogUpdate(id, nama, alamat, kelamin, tglLahir, jurusan, asalKampus, jabatan, perusahaan);
+        dialog.setVisible(true);
+
+      
+        loadTable();
+    }//GEN-LAST:event_BTNUpdateActionPerformed
+private void hapusDataPenyewa() {
+    int selectedRow = jTable1.getSelectedRow();
+
+    if (selectedRow == -1) {
+        JOptionPane.showMessageDialog(null, "Pilih baris data yang ingin dihapus terlebih dahulu.");
+    } else {
+        int konfirmasi = JOptionPane.showConfirmDialog(null,
+            "Yakin ingin menghapus data ini?",
+            "Konfirmasi Hapus",
+            JOptionPane.YES_NO_OPTION);
+
+        if (konfirmasi == JOptionPane.YES_OPTION) {
+            try {
+                // Ambil ID dari kolom pertama (kolom ID)
+                int idPenyewa = (int) jTable1.getValueAt(selectedRow, 0);
+
+                // Hapus dari database
+                Connection conn = DataBase.getKoneksi();
+                String sql = "DELETE FROM Penyewa WHERE id_penyewa = ?";
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ps.setInt(1, idPenyewa);
+                int affectedRows = ps.executeUpdate();
+
+                if (affectedRows > 0) {
+                    JOptionPane.showMessageDialog(null, "Data berhasil dihapus dari database.");
+                    tampilkanDataPenyewa(); // Refresh tabel
+                } else {
+                    JOptionPane.showMessageDialog(null, "Data gagal dihapus dari database.");
+                }
+
+                ps.close();
+                conn.close();
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Terjadi kesalahan saat menghapus data: " + e.getMessage());
             }
         }
+    }
+}
+    private void BTNHapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNHapusActionPerformed
+        hapusDataPenyewa();
     }//GEN-LAST:event_BTNHapusActionPerformed
 private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -708,10 +750,76 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
         });
         
     }
+private void tampilkanDataPenyewa() {
+    DefaultTableModel model = new DefaultTableModel();
+    model.addColumn("ID");
+    model.addColumn("Nama");
+    model.addColumn("Alamat");
+    model.addColumn("Jenis Kelamin");
+    model.addColumn("Tanggal Lahir");
+    model.addColumn("Jurusan");
+    model.addColumn("Asal Kampus");
+    model.addColumn("Jabatan");
+    model.addColumn("Nama Perusahaan");
+
+    try {
+        Connection conn = DataBase.getKoneksi();
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery("SELECT * FROM Penyewa");
+
+        while (rs.next()) {
+            model.addRow(new Object[]{
+                rs.getInt("id_penyewa"),
+                rs.getString("nama"),
+                rs.getString("alamat"),
+                rs.getString("jenis_kelamin"),
+                rs.getDate("tanggal_lahir"),
+                rs.getString("jurusan"),
+                rs.getString("asal_kampus"),
+                rs.getString("jabatan"),
+                rs.getString("nama_perusahaan")
+            });
+        }
+
+        jTable1.setModel(model);
+      
+
+        stmt.close();
+    } catch (SQLException e) {
+        JOptionPane.showMessageDialog(this, "Gagal menampilkan data: " + e.getMessage());
+    }
+}
+public void loadTable() {
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+model.setRowCount(0); // Clear data lama
+
+try {
+    Connection conn = DataBase.getKoneksi();
+    Statement st = conn.createStatement();
+    ResultSet rs = st.executeQuery("SELECT * FROM penyewa");
+
+    while (rs.next()) {
+        model.addRow(new Object[]{
+            rs.getInt("id_penyewa"),
+            rs.getString("nama"),
+            rs.getString("alamat"),
+            rs.getString("jenis_kelamin"),
+            rs.getString("tanggal_lahir"),
+            rs.getString("jurusan"),
+            rs.getString("asal_kampus"),
+            rs.getString("jabatan"),
+            rs.getString("nama_perusahaan")
+        });
+    }
+} catch (Exception e) {
+    e.printStackTrace();
+}
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNEditPenyewa;
     private javax.swing.JButton BTNHapus;
+    private javax.swing.JButton BTNUpdate;
     private javax.swing.JButton BTNiNPUT;
     private javax.swing.JButton BTNinputPelajar;
     private javax.swing.JComboBox<String> CBJenisKelamin;
@@ -728,7 +836,6 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
     private javax.swing.JTextField TFNamaPerusahaan;
     private javax.swing.JTextField TFNamaSekolah;
     private javax.swing.JTextField TFTglLahir;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel12;
