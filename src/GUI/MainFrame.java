@@ -5,6 +5,7 @@
 package GUI;
 
 import DBConnect.DataBase;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -45,13 +46,17 @@ public class MainFrame extends javax.swing.JFrame {
      */
     public MainFrame() {
         initComponents();
+        loadStatusKamar();
         tampilkanDataPenyewa();
+        loadRiwayatSewa(); 
         
         PanelMainMenu.setVisible(true);
         PanelPenyewaBaru.setVisible(true);
         PanelPekerja.setVisible(true);
         PanelPelajar.setVisible(true);
         PanelEditPenyewa.setVisible(false);
+        PanelKamar.setVisible(false);
+        PanelRiwayatSewa.setVisible(false);
 
         CBStatusPenyewa.addActionListener((ActionEvent e) -> {
             String selectedStatus = (String) CBStatusPenyewa.getSelectedItem();
@@ -101,6 +106,66 @@ public class MainFrame extends javax.swing.JFrame {
         
     }
     
+    public void loadStatusKamar() {
+    try {
+        Connection conn = DataBase.getKoneksi(); // atau DBConnect.getKoneksi();
+        String sql = "SELECT k.id_kamar, k.no_kamar, " +
+                     "CASE WHEN EXISTS (" +
+                     "    SELECT 1 FROM Sewa s " +
+                     "    WHERE s.id_kamar = k.id_kamar " +
+                     "    AND s.status_sewa = 'Disewa' " +
+                     "    AND CAST(GETDATE() AS DATE) >= s.tanggal_mulai " +
+                     "    AND CAST(GETDATE() AS DATE) <= s.tanggal_berakhir" +
+                     ") THEN 'Disewa' ELSE 'Kosong' END AS status " +
+                     "FROM Kamar k";
+
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            int idKamar = rs.getInt("id_kamar");
+            String status = rs.getString("status");
+
+            // Cek dan warnai tombol sesuai id kamar
+            if (idKamar == 101) {
+                BTNKamarA1.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            } else if (idKamar == 102) {
+                BTNKamarA2.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            } else if (idKamar == 103) {
+                BTNKamarA3.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 104) {
+                BTNKamarA4.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 105) {
+                BTNKamarA5.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 106) {
+                BTNKamarA6.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 107) {
+                BTNKamarA7.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 108) {
+                BTNKamarA8.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 201) {
+                BTNKamarB1.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 202) {
+                BTNKamarB2.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 203) {
+                BTNKamarB3.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 204) {
+                BTNKamarB4.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 205) {
+                BTNKamarB5.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 206) {
+                BTNKamarB6.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 207) {
+                BTNKamarB7.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }else if (idKamar == 208) {
+                BTNKamarB8.setBackground(status.equals("Disewa") ? Color.RED : Color.GREEN);
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -138,12 +203,39 @@ public class MainFrame extends javax.swing.JFrame {
         jLabel9 = new javax.swing.JLabel();
         BTNiNPUT = new javax.swing.JButton();
         BTNEditPenyewa = new javax.swing.JButton();
+        BTNEditPenyewa1 = new javax.swing.JButton();
+        BTNRiwayatSewa = new javax.swing.JButton();
         PanelEditPenyewa = new javax.swing.JPanel();
         jLabel8 = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         BTNHapus = new javax.swing.JButton();
         BTNUpdate = new javax.swing.JButton();
+        PanelKamar = new javax.swing.JPanel();
+        jLabel11 = new javax.swing.JLabel();
+        PanelLantai1 = new javax.swing.JPanel();
+        BTNKamarA1 = new javax.swing.JButton();
+        BTNKamarA2 = new javax.swing.JButton();
+        BTNKamarA3 = new javax.swing.JButton();
+        BTNKamarA4 = new javax.swing.JButton();
+        BTNKamarA5 = new javax.swing.JButton();
+        BTNKamarA7 = new javax.swing.JButton();
+        BTNKamarA6 = new javax.swing.JButton();
+        BTNKamarA8 = new javax.swing.JButton();
+        jLabel14 = new javax.swing.JLabel();
+        PanelLantai2 = new javax.swing.JPanel();
+        BTNKamarB1 = new javax.swing.JButton();
+        BTNKamarB2 = new javax.swing.JButton();
+        BTNKamarB3 = new javax.swing.JButton();
+        BTNKamarB4 = new javax.swing.JButton();
+        BTNKamarB5 = new javax.swing.JButton();
+        BTNKamarB7 = new javax.swing.JButton();
+        BTNKamarB6 = new javax.swing.JButton();
+        BTNKamarB8 = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        PanelRiwayatSewa = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        TBRiwayatSewa = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -386,6 +478,22 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        BTNEditPenyewa1.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        BTNEditPenyewa1.setText("Sewa kamar");
+        BTNEditPenyewa1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNEditPenyewa1ActionPerformed(evt);
+            }
+        });
+
+        BTNRiwayatSewa.setFont(new java.awt.Font("Trebuchet MS", 1, 18)); // NOI18N
+        BTNRiwayatSewa.setText("Riwayat Sewa");
+        BTNRiwayatSewa.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNRiwayatSewaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PanelMainMenuLayout = new javax.swing.GroupLayout(PanelMainMenu);
         PanelMainMenu.setLayout(PanelMainMenuLayout);
         PanelMainMenuLayout.setHorizontalGroup(
@@ -397,7 +505,9 @@ public class MainFrame extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelMainMenuLayout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(41, 41, 41))
-                    .addComponent(BTNEditPenyewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(BTNEditPenyewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BTNEditPenyewa1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(BTNRiwayatSewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(25, Short.MAX_VALUE))
         );
         PanelMainMenuLayout.setVerticalGroup(
@@ -409,6 +519,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(BTNiNPUT, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(BTNEditPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BTNEditPenyewa1, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(BTNRiwayatSewa, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -472,7 +586,286 @@ public class MainFrame extends javax.swing.JFrame {
                 .addGroup(PanelEditPenyewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(BTNHapus, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(BTNUpdate, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(149, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel11.setText("Sewa Kamar");
+
+        BTNKamarA1.setText("A1");
+        BTNKamarA1.setActionCommand("");
+        BTNKamarA1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA1ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA2.setText("A2");
+        BTNKamarA2.setActionCommand("");
+        BTNKamarA2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA2ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA3.setText("A3");
+        BTNKamarA3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA3ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA4.setText("A4");
+        BTNKamarA4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA4ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA5.setText("A5");
+        BTNKamarA5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA5ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA7.setText("A7");
+        BTNKamarA7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA7ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA6.setText("A6");
+        BTNKamarA6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA6ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarA8.setText("A8");
+        BTNKamarA8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarA8ActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("Lantai 1");
+
+        javax.swing.GroupLayout PanelLantai1Layout = new javax.swing.GroupLayout(PanelLantai1);
+        PanelLantai1.setLayout(PanelLantai1Layout);
+        PanelLantai1Layout.setHorizontalGroup(
+            PanelLantai1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelLantai1Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(PanelLantai1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BTNKamarA3)
+                    .addComponent(BTNKamarA4)
+                    .addComponent(BTNKamarA2)
+                    .addComponent(BTNKamarA1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 312, Short.MAX_VALUE)
+                .addGroup(PanelLantai1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BTNKamarA6)
+                    .addComponent(BTNKamarA5)
+                    .addComponent(BTNKamarA7)
+                    .addComponent(BTNKamarA8))
+                .addGap(39, 39, 39))
+            .addGroup(PanelLantai1Layout.createSequentialGroup()
+                .addGap(240, 240, 240)
+                .addComponent(jLabel14)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        PanelLantai1Layout.setVerticalGroup(
+            PanelLantai1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelLantai1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel14)
+                .addGap(32, 32, 32)
+                .addGroup(PanelLantai1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelLantai1Layout.createSequentialGroup()
+                        .addComponent(BTNKamarA5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA7, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA8, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelLantai1Layout.createSequentialGroup()
+                        .addComponent(BTNKamarA1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarA4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(78, Short.MAX_VALUE))
+        );
+
+        BTNKamarB1.setText("B1");
+        BTNKamarB1.setActionCommand("");
+        BTNKamarB1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB1ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB2.setText("B2");
+        BTNKamarB2.setActionCommand("");
+        BTNKamarB2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB2ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB3.setText("B3");
+        BTNKamarB3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB3ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB4.setText("B4");
+        BTNKamarB4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB4ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB5.setText("B5");
+        BTNKamarB5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB5ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB7.setText("B7");
+        BTNKamarB7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB7ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB6.setText("B6");
+        BTNKamarB6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB6ActionPerformed(evt);
+            }
+        });
+
+        BTNKamarB8.setText("B8");
+        BTNKamarB8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BTNKamarB8ActionPerformed(evt);
+            }
+        });
+
+        jLabel15.setText("Lantai 2");
+
+        javax.swing.GroupLayout PanelLantai2Layout = new javax.swing.GroupLayout(PanelLantai2);
+        PanelLantai2.setLayout(PanelLantai2Layout);
+        PanelLantai2Layout.setHorizontalGroup(
+            PanelLantai2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelLantai2Layout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addGroup(PanelLantai2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BTNKamarB3)
+                    .addComponent(BTNKamarB4)
+                    .addComponent(BTNKamarB2)
+                    .addComponent(BTNKamarB1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 318, Short.MAX_VALUE)
+                .addGroup(PanelLantai2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(BTNKamarB6)
+                    .addComponent(BTNKamarB5)
+                    .addComponent(BTNKamarB7)
+                    .addComponent(BTNKamarB8))
+                .addGap(39, 39, 39))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelLantai2Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel15)
+                .addGap(231, 231, 231))
+        );
+        PanelLantai2Layout.setVerticalGroup(
+            PanelLantai2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelLantai2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel15)
+                .addGap(32, 32, 32)
+                .addGroup(PanelLantai2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelLantai2Layout.createSequentialGroup()
+                        .addComponent(BTNKamarB5, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB6, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB7, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB8, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelLantai2Layout.createSequentialGroup()
+                        .addComponent(BTNKamarB1, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB2, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB3, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(BTNKamarB4, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(66, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout PanelKamarLayout = new javax.swing.GroupLayout(PanelKamar);
+        PanelKamar.setLayout(PanelKamarLayout);
+        PanelKamarLayout.setHorizontalGroup(
+            PanelKamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelKamarLayout.createSequentialGroup()
+                .addGroup(PanelKamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PanelKamarLayout.createSequentialGroup()
+                        .addGap(43, 43, 43)
+                        .addComponent(PanelLantai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(178, 178, 178)
+                        .addComponent(PanelLantai2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PanelKamarLayout.createSequentialGroup()
+                        .addGap(611, 611, 611)
+                        .addComponent(jLabel11)))
+                .addGap(0, 24, Short.MAX_VALUE))
+        );
+        PanelKamarLayout.setVerticalGroup(
+            PanelKamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelKamarLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addComponent(jLabel11)
+                .addGap(49, 49, 49)
+                .addGroup(PanelKamarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(PanelLantai1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(PanelLantai2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(88, Short.MAX_VALUE))
+        );
+
+        TBRiwayatSewa.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane2.setViewportView(TBRiwayatSewa);
+
+        javax.swing.GroupLayout PanelRiwayatSewaLayout = new javax.swing.GroupLayout(PanelRiwayatSewa);
+        PanelRiwayatSewa.setLayout(PanelRiwayatSewaLayout);
+        PanelRiwayatSewaLayout.setHorizontalGroup(
+            PanelRiwayatSewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelRiwayatSewaLayout.createSequentialGroup()
+                .addGap(57, 57, 57)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 864, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(46, Short.MAX_VALUE))
+        );
+        PanelRiwayatSewaLayout.setVerticalGroup(
+            PanelRiwayatSewaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(PanelRiwayatSewaLayout.createSequentialGroup()
+                .addGap(20, 20, 20)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 479, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -485,6 +878,10 @@ public class MainFrame extends javax.swing.JFrame {
                 .addComponent(PanelEditPenyewa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PanelKamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(PanelRiwayatSewa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -492,6 +889,13 @@ public class MainFrame extends javax.swing.JFrame {
             .addComponent(PanelMainMenu, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PanelEditPenyewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(PanelPenyewaBaru, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(PanelKamar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(PanelRiwayatSewa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
@@ -589,12 +993,16 @@ public class MainFrame extends javax.swing.JFrame {
         PanelPenyewaBaru.setVisible(true);
         PanelPekerja.setVisible(true);
         PanelEditPenyewa.setVisible(false);
+        PanelKamar.setVisible(false);
+        PanelRiwayatSewa.setVisible(false);
     }//GEN-LAST:event_BTNiNPUTActionPerformed
 
     private void BTNEditPenyewaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNEditPenyewaActionPerformed
         PanelMainMenu.setVisible(true);
         PanelPenyewaBaru.setVisible(false);
         PanelEditPenyewa.setVisible(true);
+        PanelKamar.setVisible(false);
+        PanelRiwayatSewa.setVisible(false);
     }//GEN-LAST:event_BTNEditPenyewaActionPerformed
 
     private void TFNamaSekolahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TFNamaSekolahActionPerformed
@@ -692,6 +1100,518 @@ private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:even
         ex.printStackTrace();
         }
     }//GEN-LAST:event_formWindowClosing
+
+    private void BTNEditPenyewa1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNEditPenyewa1ActionPerformed
+        PanelMainMenu.setVisible(true);
+        PanelPenyewaBaru.setVisible(false);
+        PanelEditPenyewa.setVisible(false);
+        PanelKamar.setVisible(true);
+        PanelRiwayatSewa.setVisible(false);
+    }//GEN-LAST:event_BTNEditPenyewa1ActionPerformed
+
+    private void BTNKamarA1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA1ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 101); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA1.setBackground(Color.RED);
+            } else {
+                BTNKamarA1.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA1ActionPerformed
+
+    private void BTNKamarA2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA2ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 102); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA2.setBackground(Color.RED);
+            } else {
+                BTNKamarA2.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA2ActionPerformed
+
+    private void BTNKamarA3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA3ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 103); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA3.setBackground(Color.RED);
+            } else {
+                BTNKamarA3.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA3ActionPerformed
+
+    private void BTNKamarA4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA4ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 104); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA4.setBackground(Color.RED);
+            } else {
+                BTNKamarA4.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA4ActionPerformed
+
+    private void BTNKamarA8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA8ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 108); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA8.setBackground(Color.RED);
+            } else {
+                BTNKamarA8.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA8ActionPerformed
+
+    private void BTNKamarA7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA7ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 107); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA7.setBackground(Color.RED);
+            } else {
+                BTNKamarA7.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA7ActionPerformed
+
+    private void BTNKamarA6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA6ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 106); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA6.setBackground(Color.RED);
+            } else {
+                BTNKamarA6.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA6ActionPerformed
+
+    private void BTNKamarA5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarA5ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 105); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarA5.setBackground(Color.RED);
+            } else {
+                BTNKamarA5.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarA5ActionPerformed
+
+    private void BTNKamarB1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB1ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 201); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB1.setBackground(Color.RED);
+            } else {
+                BTNKamarB1.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB1ActionPerformed
+
+    private void BTNKamarB2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB2ActionPerformed
+       try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 201); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB1.setBackground(Color.RED);
+            } else {
+                BTNKamarB1.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB2ActionPerformed
+
+    private void BTNKamarB3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB3ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 203); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB3.setBackground(Color.RED);
+            } else {
+                BTNKamarB3.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB3ActionPerformed
+
+    private void BTNKamarB4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB4ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 204); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB4.setBackground(Color.RED);
+            } else {
+                BTNKamarB4.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB4ActionPerformed
+
+    private void BTNKamarB5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB5ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 205); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB5.setBackground(Color.RED);
+            } else {
+                BTNKamarB5.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB5ActionPerformed
+
+    private void BTNKamarB7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB7ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 207); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB7.setBackground(Color.RED);
+            } else {
+                BTNKamarB7.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB7ActionPerformed
+
+    private void BTNKamarB6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB6ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 206); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB6.setBackground(Color.RED);
+            } else {
+                BTNKamarB6.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB6ActionPerformed
+
+    private void BTNKamarB8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNKamarB8ActionPerformed
+        try {
+        Connection conn = DataBase.getKoneksi();
+        String sql = "SELECT * FROM Kamar WHERE id_kamar = ?";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ps.setInt(1, 208); // contoh ID kamar
+        ResultSet rs = ps.executeQuery();
+
+        if (rs.next()) {
+            DialogSewa dlg = new DialogSewa(this, true);
+            dlg.setDataKamar(
+                rs.getInt("id_kamar"),
+                rs.getString("no_kamar"),
+                rs.getInt("lantai"),
+                rs.getString("jenis_kamar"),
+                rs.getDouble("harga_perbulan"),
+                rs.getString("fasilitas"),
+                rs.getInt("id_pemilik")
+            );
+            dlg.setVisible(true);
+             if (dlg.isBerhasil() && dlg.getStatus().equalsIgnoreCase("Disewa")) {
+                BTNKamarB8.setBackground(Color.RED);
+            } else {
+                BTNKamarB8.setBackground(Color.GREEN); // opsional
+            }
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    }//GEN-LAST:event_BTNKamarB8ActionPerformed
+
+    private void BTNRiwayatSewaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BTNRiwayatSewaActionPerformed
+         PanelMainMenu.setVisible(true);
+        PanelPenyewaBaru.setVisible(false);
+        PanelEditPenyewa.setVisible(false);
+        PanelKamar.setVisible(false);
+        PanelRiwayatSewa.setVisible(true);
+    }//GEN-LAST:event_BTNRiwayatSewaActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {                                  
         try {
@@ -815,20 +1735,75 @@ try {
     e.printStackTrace();
 }
 }
+public void loadRiwayatSewa() {
+    DefaultTableModel model = new DefaultTableModel();
+    model.setColumnIdentifiers(new String[] {
+        "ID Sewa", "ID Penyewa", "ID Kamar", "Mulai", "Berakhir", "Durasi", "Harga", "Total", "Status"
+    });
+
+    try {
+        Connection conn = DataBase.getKoneksi(); // atau DBConnect.getKoneksi();
+        String sql = "SELECT * FROM Sewa";
+        PreparedStatement ps = conn.prepareStatement(sql);
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            model.addRow(new Object[] {
+                rs.getInt("id_sewa"),
+                rs.getInt("id_penyewa"),
+                rs.getInt("id_kamar"),
+                rs.getDate("tanggal_mulai"),
+                rs.getDate("tanggal_berakhir"),
+                rs.getInt("durasi_bulan"),
+                rs.getDouble("harga_perbulan"),
+                rs.getDouble("total_biaya"),
+                rs.getString("status_sewa")
+            });
+        }
+
+        TBRiwayatSewa.setModel(model);
+        TBRiwayatSewa   .setEnabled(false); // Biar tidak bisa diubah
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BTNEditPenyewa;
+    private javax.swing.JButton BTNEditPenyewa1;
     private javax.swing.JButton BTNHapus;
+    private javax.swing.JButton BTNKamarA1;
+    private javax.swing.JButton BTNKamarA2;
+    private javax.swing.JButton BTNKamarA3;
+    private javax.swing.JButton BTNKamarA4;
+    private javax.swing.JButton BTNKamarA5;
+    private javax.swing.JButton BTNKamarA6;
+    private javax.swing.JButton BTNKamarA7;
+    private javax.swing.JButton BTNKamarA8;
+    private javax.swing.JButton BTNKamarB1;
+    private javax.swing.JButton BTNKamarB2;
+    private javax.swing.JButton BTNKamarB3;
+    private javax.swing.JButton BTNKamarB4;
+    private javax.swing.JButton BTNKamarB5;
+    private javax.swing.JButton BTNKamarB6;
+    private javax.swing.JButton BTNKamarB7;
+    private javax.swing.JButton BTNKamarB8;
+    private javax.swing.JButton BTNRiwayatSewa;
     private javax.swing.JButton BTNUpdate;
     private javax.swing.JButton BTNiNPUT;
     private javax.swing.JButton BTNinputPelajar;
     private javax.swing.JComboBox<String> CBJenisKelamin;
     private javax.swing.JComboBox<String> CBStatusPenyewa;
     private javax.swing.JPanel PanelEditPenyewa;
+    private javax.swing.JPanel PanelKamar;
+    private javax.swing.JPanel PanelLantai1;
+    private javax.swing.JPanel PanelLantai2;
     private javax.swing.JPanel PanelMainMenu;
     private javax.swing.JPanel PanelPekerja;
     private javax.swing.JPanel PanelPelajar;
     private javax.swing.JPanel PanelPenyewaBaru;
+    private javax.swing.JPanel PanelRiwayatSewa;
+    private javax.swing.JTable TBRiwayatSewa;
     private javax.swing.JTextField TFAlamat;
     private javax.swing.JTextField TFJabatan;
     private javax.swing.JTextField TFNamaJurusan;
@@ -838,8 +1813,11 @@ try {
     private javax.swing.JTextField TFTglLahir;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -849,6 +1827,7 @@ try {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables
 }
